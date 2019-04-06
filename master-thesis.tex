@@ -1,0 +1,48 @@
+% This is file `seuthesix.tex',
+% This file is the source of the documentation of the `seuthesix' class.
+% Copyright (c) 2016 James Fan, email: zhimengfan1990@163.com
+% License: GNU General Public License, version 3
+%This file is part of ``seuthesix'' package.
+%``seuthesix'' is free software: you can redistribute it and/or modify
+%it under the terms of the GNU General Public License as published by
+%the Free Software Foundation, either version 3 of the License, or
+%(at your option) any later version.
+%``seuthesix'' is distributed in the hope that it will be useful,
+%but WITHOUT ANY WARRANTY; without even the implied warranty of
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%GNU General Public License for more details.
+%
+%You should have received a copy of the GNU General Public License
+%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+\documentclass[figurelist,tablelist,algorithmlist,nomlist,masters]{Style/seuthesix}
+\usepackage{hologo}
+\usepackage{pdfpages}
+\usepackage{enumitem}
+\setlist[enumerate]{wide=\parindent}% only indent the first line
+\setlist[itemize]{wide=\parindent}% only indent the first line
+\setlist{nosep}
+
+\begin{document}
+\input{Tex/Frontpage}
+\begin{abstract}{\TeX, \LaTeX, 文档类， 学位论文}
+本文介绍如何使用\seuthesix 文档类撰写东南大学学位论文。
+\end{abstract}
+\begin{englishabstract}{\TeX, \LaTeX, document class, thesis/dissertation}
+This work presents an introduction of how to use \seuthesix document class to 
+typeset the thesis/dissertation of Southeast University.
+\end{englishabstract}
+
+\tableofcontents
+\listofothers
+
+\mainmatter
+
+\input{Tex/Intro}
+
+\input{Tex/Backbone}
+
+
+\bibliographystyle{Biblio/IEEEbib} 
+\bibliography{master-thesis}       
+\end{document}
