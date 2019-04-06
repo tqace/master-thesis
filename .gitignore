@@ -18,6 +18,8 @@
 *.dvi
 *.lof
 *.lot
+*.loa
+*.nlo
 *.toc
 *.pdf
-
+tmp/
