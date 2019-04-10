@@ -1,4 +1,4 @@
-\chapter{基于注意力机制的局部特征对齐网络}
+\chapter{基于注意力机制的局部对齐网络}
 
 \section{引言}
 基于深度学习的服装检索网络一般可以概括为两个子网络：表示和匹配。表示网络即特征提取器，一般使用在ImageNet预训练的主流深度卷积网络，比如VGG、ResNet等主流骨干网络；
@@ -30,4 +30,43 @@ Fashion-Net使用关键点信息协助局部的定位，网络第一阶段先生
 服装检索任务的目标是在由很多款式服装图像组成的检索库中找到和检索图片（query）相同款式的服装。这个任务可以被看作一种排序问题：给定一个query，那么检索库中和query
 相同款式的服装相对于与其不同款式的服装应当和query更加相似。
 
-基于此，本方法引入度量学习训练模型，训练样本组成方式如下：对于一个批次（Batch）的样本${\mathcal{B} = \{I_{1},I_{2},\cdots,I_{N}}\}$
+基于此，本方法引入度量学习训练模型，训练样本组成方式如下：对于一个批次（Batch）的样本${\mathcal{B} = \{I_{1},I_{2},\cdots,I_{N}\}}$，我们从中组成一系列三元组，
+${\mathcal{T} = \{(I_{a},I_{p},I_{n})\}}$，其中($I_{a},I_{p}$)是一对正样本对，表示这是来自同一款服装的两幅照片；($I_{a},I_{n}$)是一对负样本对，表示来自不同款式服装的
+两幅照片。
+
+由于检索任务的本质是一个排序问题，我们使用三元组损失（Triplet loss）函数优化网络，其数学表达式为：
+\begin{equation}
+\label{eq:partnet:1}
+\mathcal{L}(I_{a},I_{p},I_{n}) = \max \{d(h(I_{a}),h(I_{p})) - d(h(I_{a}),h(I_{n})) + m,0\}
+\end{equation}
+这里$(I_{a},I_{p},I_{n}) \in \mathcal{T}$，$m$(margin)是我们认为负样本对之间的距离和正样本对之间应该有的距离差值，借鉴已有的工作\cite{schroff2015facenet}，
+在我们的实现中，$m$取了0.2。$d(\mathbf{x},\mathbf{y})=\left\|{\mathbf{x} - \mathbf{y}}\right\|_{2}$，代表了欧几里得距离，即欧式距离。$h(I)$代表将图像$I$输入网络并提取得到其特征。
+所以我们可以得到如下完整的损失函数定义：
+\begin{equation}
+\label{eq:partnet:2}
+\mathcal{L}(\mathcal{T}) = \frac{1}{\left|\mathcal{T}\right|} \sum_{(I_{a},I_{p},I_{n}) \in \mathcal{T}} \mathcal{L}(I_{a},I_{p},I_{n})
+\end{equation}
+公式里的$\left|\mathcal{T}\right|$代表这个Batch里所包含所有三元组的个数。
+
+\subsection{局部对齐网络}
+网络的第一阶段是一个特征提取器，这个特征提取器是一个深度全卷积神经网络（FCN），其输出是一个特征图，随后将其作为局部特征提取网络的输入，由其提取并输出局部特征。
+与直接对输入图像做空间上的水平、竖直切分或者使用网格切分的方式不同，我们的目的是提取对齐之后的局部特征。
+
+局部对齐网络如图\ref{fig:partnet}所示，包含了几个分支，每个分支都以FCN的输出作为输入，并检测到一个具有判别力的独立的局部区域，最后将这个区域的特征提取并输出。
+我们将FCN所提取的特征图用一个三维的张量\textbf{T}表示，其每个维度大小为$w\times h \times c$，代表宽度为$w$，长度为$h$，通道数为$c$的张量。局部对齐网络的每个分支
+都会生成一个二维的掩膜$M_{i}$，$i$代表第$i$个分支，其大小为$w\times h$，$M(x,y)$的大小表示$(x,y)$这个区域的特征对应的权重。
+那么对于第$i$个分支来说，其输出特征$\textbf{T}_{i}$可表示为如下形式：
+\begin{equation}
+\label{eq:partnet:3}
+\textbf{T}_{i}(x,y,c)=\textbf{T}(x,y,c) \times M_{i}(x,y)
+\end{equation}
+得到$\textbf{T}_{i}$之后，会通过全局平均池化（Global average pooling）操作得到一个向量，$\textbf{f}_{i}=AveragePooling(\textbf{T}_{i})$。
+随后用一个线性降维层对这个向量降维，降维层采用全连接层实现，$\bar{\textbf{f}_{i}}=\textbf{W}_{FC_{i}}\textbf{f}_{i}$。接下来，我们将来自所有分支的局部特征拼接起来：
+\begin{equation}
+\label{eq:partnet:4}
+\textbf{f}=[\bar{\textbf{f}_{1}}^\top,\bar{\textbf{f}_{2}}^\top,\cdots,\bar{\textbf{f}_{N}}^\top]^\top
+\end{equation}
+最后对拼接后的特征做$L_{2}$归一化，得到公式\ref{eq:partnet:1}中的$h(I)$。
+\input{Img/partnet}
+\subsection{注意力模块}
+
