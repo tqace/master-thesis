@@ -33,14 +33,14 @@ ${\mathcal{T} = \{(I_{a},I_{p},I_{n})\}}$，其中($I_{a},I_{p}$)是一对正样
 由于检索任务的本质是一个排序问题，我们使用三元组损失（Triplet loss）函数优化网络，其数学表达式为：
 \begin{equation}
 \label{eq:partnet:1}
-\mathcal{L}(I_{a},I_{p},I_{n}) = \max \{d(h(I_{a}),h(I_{p})) - d(h(I_{a}),h(I_{n})) + m,0\}
+l(I_{a},I_{p},I_{n}) = \max \{d(h(I_{a}),h(I_{p})) - d(h(I_{a}),h(I_{n})) + m,0\}
 \end{equation}
 这里$(I_{a},I_{p},I_{n}) \in \mathcal{T}$，$m$(margin)是我们认为负样本对之间的距离和正样本对之间应该有的距离差值，借鉴已有的工作\cite{schroff2015facenet}，
 在我们的实现中，$m$取了0.2。$d(\mathbf{x},\mathbf{y})=\left\|{\mathbf{x} - \mathbf{y}}\right\|_{2}$，代表了欧几里得距离，即欧式距离。$h(I)$代表将图像$I$输入网络并提取得到其特征。
 所以我们可以得到如下完整的损失函数定义：
 \begin{equation}
 \label{eq:partnet:2}
-\mathcal{L}(\mathcal{T}) = \frac{1}{\left|\mathcal{T}\right|} \sum_{(I_{a},I_{p},I_{n}) \in \mathcal{T}} \mathcal{L}(I_{a},I_{p},I_{n})
+\mathcal{L}(\mathcal{T}) = \frac{1}{\left|\mathcal{T}\right|} \sum_{(I_{a},I_{p},I_{n}) \in \mathcal{T}} l(I_{a},I_{p},I_{n})
 \end{equation}
 公式里的$\left|\mathcal{T}\right|$代表这个Batch里所包含所有三元组的个数。
 
@@ -145,5 +145,34 @@ Hu等人将相同的理念应用在目标检测任务\cite{hu2018relation}，也
   以步骤1得到的所有query作为模型的输入，在目标域做检索，根据检索库里图像特征和当前query对应的特征的相似度排序，我们保留top $N$的结果，即前N个和输入query最为相似的图像。
   \item[3.]伪标签生成。对与得到的top $N$的结果，认为前$m$个样本与query是同款服装，前$i$至$j$个样本与query是非同款样本，其中$0<m<i<j<N$。
 \end{itemize}
-\subsubsection{在线三元组损失}
 
+挖掘到的样本对应的标签是上述算法得到的伪标签，伪标签最然没有绝对的准确性，但是是由模型的检索结果决定，所以按照伪标签去训练不会使模型的参数分布产生巨大变动。
+\subsubsection{在线三元组损失}
+如上文所述，训练时引入度量学习作为网络的监督，即Triplet loss。传统的三元组（triplet）组成采用离线的方式，在网络训练前将样本配成三元组，
+训练时依次将所有的三元组送入网络。这种方法较为笨拙，预先组成的三元组数量非常庞大，用文本的方式保存也非常不灵活。我们采用在线组成三元组的方式训练网络，
+有效简化了这一问题。
+\input{Img/triplet}
+
+在图\ref{fig:triplet}中描述了网络在训练过程中每个Batch的样本构成方式，Batchsize为70，共包含7个不同的ID，每个ID又由10个样本组成。由三元组的定义可知，任意两个来自相同
+ID的样本，如图中的a(anchor)和p(positive)，以及另一个来自任意不同ID的样本，如图中的n(negative)便可以组成一个三元组，网络在训练时在线遍历了当前Batch所有的三元组
+并统计当前Batch所有三元组的损失的均值，每个ID的损失计算如公式\ref{eq:partnet:triplet}:
+\begin{equation}
+\label{eq:partnet:triplet}
+\mathcal{L}_{ID}=\sum_{a=1}^{\left| ID \right|}\sum_{p=1}^{\left| ID \right|}\sum_{n=1}^{\bar{\left| ID \right|}} \{l(I_{a},I_{p},I_{n});p \ne a\}
+\end{equation}
+其中$\left| ID \right|$代表当前ID的样本总数，$\bar{\left| ID \right|}$代表除了当前ID外，Batch里其余所有样本的数量。
+
+图\ref{fig:triplet}所描述的样本组成及损失计算方式适用于训练样本仅来自于源域的情况，当在源域的数据集下训练出第一个模型并在目标域挖掘出跨域的训练样本之后，后续网络训练
+使用的在线三元组损失的计算策略作出了对应的调整。其中与图\ref{fig:triplet}描述的方式有如下几点区别：
+\begin{itemize}
+  \item[1.]训练样本来自两个域：源域和目标域。其中来自源域的训练样本包含M个ID；来自目标域的训练样本由跨域样本挖掘算法得到，包含N个ID，每个ID由挖掘算法中提及的query
+    以及其检索对应的top $m$的样本组成。
+  \item[2.]在每个Batch的组成过程中，随机从M+N个ID中采样，若采样得到的ID来自目标域的N个ID，则将这个ID的query对应的top $i$-top $j$组成第M+N个ID与之一起送入当前Batch，
+    这种情况下的Batch构成与图\ref{fig:triplet-mining}一致，三种颜色分别代表了来自源域和目标域以及额外的ID：M+N。
+  \item[3.]不统计属于ID：M+N的样本作为三元组里的a或者p时所产生的损失。其出发点也很容易理解：我们认为
+    top $i$ - top $j$的样本含有大量噪声，应属于query的非同款样本，且他们本身不应看作同一款服装样本，但是当它们作为一个ID与top $m$对应的ID样本组成三元组时时可以使得
+    top $m$的样本之间的距离越来越近，且top $m$的样本和top $i$ - top $j$之间的距离越来越远。
+\end{itemize}
+\input{Img/triplet-mining}
+
+ 
