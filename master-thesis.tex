@@ -27,12 +27,36 @@
 
 \begin{document}
 \input{Tex/Frontpage}
-\begin{abstract}{\TeX, \LaTeX, 文档类， 学位论文}
-本文介绍如何使用\seuthesix 文档类撰写东南大学学位论文。
+\begin{abstract}{服装检索，深度学习，注意力机制，多粒度}
+  随着社会开始走向智能化，网购成为人们的主要消费方式，传统的基于文本的服装检索算法（TBIR）越来越不能满足人们精细的检索需求。得益于深度学习的蓬勃发展，基于内容的服装检索算法（CBIR）
+  成为主流。近阶段，对图像局部区域信息的抓取和对齐是该领域研究的一个热门方向，因此，设计出一个有效提取服装细节信息的深度网络具有很大的实用价值。
+
+  本文在总结已有工作的基础上，针对服装图像局部语义信息的提取和对齐问题，作出了以下贡献：
+  \begin{itemize}
+    \item[1.]提出基于注意力机制的局部对齐网络。该网络采用多个局部分支并行的架构，单个分支是一个基于注意力模块的局部特征提取器，注意力模块包含空间注意力和通道注意力
+      两个子模块，可以互相促进更好的学习注意力分布，每个分支虽然结构相同，但是可以自适应的学习得到不同的注意力分布图。此外，基于在线三元组损失（Online Triplet Loss）
+      ，提出一种跨域的样本挖掘算法，该算法基于在源域训练的模型，可以在目标域挖取并标注无标签样本，用于新一轮的训练，可以有效适应目标域的数据分布。
+    \item[2.]提出基于多粒度切分的局部对齐网络。对原图切分得到的局部区域输入网络并用分类损失做监督会面临过拟合的问题，通过对特征图感受野的分析，本方法对特征图实施
+      切分操作以提取局部信息，模型性能得到大幅提升。采用环形切分的创新性切分方式，并通过与横向、纵向切分方式的组合，保证局部关键信息特征的完整性。另外，启发式的
+      提出多粒度的切分策略，通过融合不同的切分尺度的局部特征，有效提升模型的表达能力。
+  \end{itemize}
 \end{abstract}
-\begin{englishabstract}{\TeX, \LaTeX, document class, thesis/dissertation}
-This work presents an introduction of how to use \seuthesix document class to 
-typeset the thesis/dissertation of Southeast University.
+\begin{englishabstract}{Clothing retrieval, Deep learning, Attention mechanism, Multi-granularity}
+  With the development of society towards intelligent age, online shopping has become the main way of consumption, the traditional Text-Based Image Retrieval(TBIR)
+  algorithm can no longer meet the increasingly comprehensive needs when people doing online shopping. Benefits from the flourishing of deep learning, 
+  Content-Based Image Retrieval(CBIR) has become mainstream. Recently, grasping and aligning the local area information of the input  clothing image is a 
+  popular direction in this field. 
+  
+  On the basis of summarizing the existing work, following contributions are made to the extraction and alignment of local information 
+  of clothing images:
+  \begin{itemize}
+    \item[1.]Part alignment network based on attention mechanism is proposed. This network uses multiple local branch parallel architectures, 
+      and one single branch is a local feature extractor based on the attention module. Although each branch has the same structure, it can be adaptively learned to obtain different attention maps.
+      In addition, a cross-domain sample mining algorithm is proposed, which is based on the deep model trained in the source domain and can digging and labeling unlabeled samples in the target domain.
+    \item[2.]Multi-granularity part alignment network is proposed. This method performs a partition operation on the feature map rather than the input image to extract local information, 
+      and the performance of is improved by a large margin. And through the combination of horizontal, vertical and annular partition methods to ensure the integrity of the key part information.
+      In addition, The proposed multi-granularity partition strategy effectively enhances the model by merging local features of different partition scales.
+  \end{itemize}
 \end{englishabstract}
 
 \tableofcontents
