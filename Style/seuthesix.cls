@@ -99,14 +99,14 @@ listtablename={表格目录}
 \RequirePackage{graphicx}
 \graphicspath{{Img/}{./}}
 \RequirePackage{nomencl}
-\makenomenclature
+%\makenomenclature
 \newcommand{\setnomname}[1]{\renewcommand\nomname{#1}}
-\renewcommand{\nomname}{术语与数学符号约定}
-\RequirePackage{algorithm}
-\RequirePackage{algorithmic}
-\numberwithin{algorithm}{chapter}
-\floatname{algorithm}{算法}
-\renewcommand{\listalgorithmname}{算法目录}
+%\renewcommand{\nomname}{术语与数学符号约定}
+%\RequirePackage{algorithm}
+%\RequirePackage{algorithmic}
+%\numberwithin{algorithm}{chapter}
+%\floatname{algorithm}{算法}
+%\renewcommand{\listalgorithmname}{算法目录}
 \RequirePackage[super,square]{natbib}
 \newcommand\citen[1]{[\!\!\citenum{#1}]}
 \RequirePackage{hyperref}
@@ -632,20 +632,20 @@ chapter/titleformat=\large\heiti
 \listoftables
 \fi
 
-\ifalgorithmlist
-\cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{\listalgorithmname}
-\listofalgorithms
-\fi
+%\ifalgorithmlist
+%\cleardoublepage
+%\phantomsection
+%\addcontentsline{toc}{chapter}{\listalgorithmname}
+%\listofalgorithms
+%\fi
 
-\ifnomlist
-\cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{\nomname}
-\pagestyle{nom}
-\printnomenclature[1in]
-\fi
+%\ifnomlist
+%\cleardoublepage
+%\phantomsection
+%\addcontentsline{toc}{chapter}{\nomname}
+%\pagestyle{nom}
+%\printnomenclature[1in]
+%\fi
 
 }
 

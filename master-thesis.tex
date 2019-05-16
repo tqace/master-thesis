@@ -26,23 +26,28 @@
 \setcounter{secnumdepth}{3}
 
 \begin{document}
-\input{Tex/Frontpage}
+%\input{Tex/Frontpage}
 \begin{abstract}{服装检索，深度学习，注意力机制，多粒度}
-  随着社会开始走向智能化，网购成为人们的主要消费方式，传统的基于文本的服装检索算法（TBIR）越来越不能满足人们精细的检索需求。得益于深度学习的蓬勃发展，基于内容的服装检索算法（CBIR）
-  成为主流。近阶段，对图像局部区域信息的抓取和对齐是该领域研究的一个热门方向，因此，设计出一个有效提取服装细节信息的深度网络具有很大的实用价值。
+  随着社会开始走向智能化，网购成为人们的主要消费方式，消费者搜索商品的过程一般通过电商平台的检索算法实现。对于服装购物而言，
+  传统的基于文本描述的服装检索算法（TBIR）越来越不能满足人们精细的检索需求。得益于深度学习和计算机视觉的蓬勃发展，基于图像内容的服装检索算法（CBIR）
+  成为主流，即根据消费者上传的服装图像检索其同款服装。近阶段，对图像局部区域信息的抓取和对齐是该领域研究的一个热门方向，因此，
+  设计出一个有效提取服装细节信息的深度网络具有很大的实用价值。
 
-  本文在总结已有工作的基础上，针对服装图像局部语义信息的提取和对齐问题，作出了以下贡献：
+  本文在总结已有工作的基础上，针对服装图像局部语义信息的提取和对齐问题，主要工作贡献如下：
   \begin{itemize}
-    \item[1.]提出基于注意力机制的局部对齐网络。该网络采用多个局部分支并行的架构，单个分支是一个基于注意力模块的局部特征提取器，注意力模块包含空间注意力和通道注意力
-      两个子模块，可以互相促进更好的学习注意力分布，每个分支虽然结构相同，但是可以自适应的学习得到不同的注意力分布图。此外，基于在线三元组损失（Online Triplet Loss）
-      ，提出一种跨域的样本挖掘算法，该算法基于在源域训练的模型，可以在目标域挖取并标注无标签样本，用于新一轮的训练，可以有效适应目标域的数据分布。
-    \item[2.]提出基于多粒度切分的局部对齐网络。对原图切分得到的局部区域输入网络并用分类损失做监督会面临过拟合的问题，通过对特征图感受野的分析，本方法对特征图实施
-      切分操作以提取局部信息，模型性能得到大幅提升。采用环形切分的创新性切分方式，并通过与横向、纵向切分方式的组合，保证局部关键信息特征的完整性。另外，启发式的
-      提出多粒度的切分策略，通过融合不同的切分尺度的局部特征，有效提升模型的表达能力。
+    \item[1.]提出基于注意力机制的局部对齐网络。该网络采用多个局部分支并行的架构，单个分支是一个基于注意力机制的局部特征提取器，注意力模块包含空间注意力和通道注意力
+      两个子模块，可以互相促进更好的学习注意力分布，不同的分支可以自适应的学习得到不同的注意力分布图，通过多个不同的局部区域特征联合表示有效提升了模型的表达能力。此外，基于在线三元组损失（Online Triplet Loss）
+      ，提出一种跨域的样本挖掘算法，该算法基于源域训练的模型，在目标域挖掘并标注无标签样本，以此来扩充训练数据并用于新一轮的训练，对挖掘得到目标域样本的学习使得模型可以适应目标域的数据分布，提升模型的泛化能力。
+    \item[2.]提出基于多粒度切分的局部对齐网络。对原图切分得到局部区域输入网络会面临过拟合的问题，通过对特征图感受野的分析，本方法对特征图实施
+      切分操作，可以在凸显局部信息的同时保留一定的上下文信息，模型性能得到大幅提升。提出环形切分的创新性切分方式，并通过与横向、纵向切分方式的组合，
+      保证局部关键信息特征的完整性。另外，启发式的提出多粒度的切分策略，通过融合不同的切分尺度的局部特征，有效提升模型的表达能力。
   \end{itemize}
+  \vspace{3ex}
 \end{abstract}
 \begin{englishabstract}{Clothing retrieval, Deep learning, Attention mechanism, Multi-granularity}
-  With the development of society towards intelligent age, online shopping has become the main way of consumption, the traditional Text-Based Image Retrieval(TBIR)
+  With the development of society towards intelligent age, online shopping has become the main way of consumption, 
+  the process of consumers searching for goods is generally implemented by the retrieval algorithm of the e-commerce platform. 
+  The traditional Text-Based Image Retrieval(TBIR)
   algorithm can no longer meet the increasingly comprehensive needs when people doing online shopping. Benefits from the flourishing of deep learning, 
   Content-Based Image Retrieval(CBIR) has become mainstream. Recently, grasping and aligning the local area information of the input  clothing image is a 
   popular direction in this field. 
@@ -57,6 +62,7 @@
       and the performance of is improved by a large margin. And through the combination of horizontal, vertical and annular partition methods to ensure the integrity of the key part information.
       In addition, The proposed multi-granularity partition strategy effectively enhances the model by merging local features of different partition scales.
   \end{itemize}
+  \vspace{3ex}
 \end{englishabstract}
 
 \tableofcontents
@@ -65,11 +71,27 @@
 \mainmatter
 
 \input{Tex/Intro}
-\input{Tex/Review}
+%\input{Tex/Review}
 \input{Tex/PartNet}
 \input{Tex/MGN}
 \input{Tex/Conclusion}
 
+\chapter*{致 谢}
+硕士三年，倏忽而过，回顾这三年的硕士生涯，仿佛一切都在昨天，期间的努力、茫然、喜悦和收获都历历在目。在这里，衷心的向诸位老师、同学、亲人、朋友致以发自内心的谢意。
+
+感谢汪鹏老师。汪老师是我的指导老师，从开题报告到论文的撰写，汪老师给了我诸多的建议，汪老师的学术态度让我时刻铭记要怎样做科研，这份认真、严谨的科研态度是我终生的
+学习目标。
+
+感谢刘静研究员。刘老师是我的校外指导老师，在自动化所的一年半的实习时光，刘老师是我的良师也是益友，她有着积极的科研态度和强大的科研能力，敦促、帮助我度过了很多学术上的难关。
+
+感谢我的同学王炜和王引。一起在地平线实习的几个月里，多亏了你们在生活上的照顾和陪伴，感谢学习生涯有你们的出现。
+
+感谢图像视频分析小组的诸位成员，方治伟师兄、付君师兄、郭龙腾、陈亮雨、刘飞、何兴建、卢诗晨、蔺俊琦，感谢你们分享的每一篇论文，感谢你们陪我吃的每一顿饭，
+感谢一路以来的关爱。
+
+\addcontentsline{toc}{chapter}{致谢}
+
 \bibliographystyle{Biblio/seuthesix} 
+\addcontentsline{toc}{chapter}{参考文献}
 \bibliography{Biblio/ref}       
 \end{document}
