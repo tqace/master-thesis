@@ -15,8 +15,10 @@
 %You should have received a copy of the GNU General Public License
 %along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-\documentclass[figurelist,tablelist,algorithmlist,nomlist,masters]{Style/seuthesix}
+\documentclass[figurelist,tablelist,nomlist,masters]{Style/seuthesix}
 \usepackage{hologo}
+\usepackage{fancyhdr}
+\usepackage{emptypage}
 \usepackage{pdfpages}
 \usepackage{gensymb}
 \usepackage{enumitem}
@@ -25,9 +27,19 @@
 \setlist{nosep}
 \setcounter{secnumdepth}{3}
 
+\fancypagestyle{plain}{
+  \fancyhead{}
+  
+  \fancyhead[CE,CO]{\leftmark}
+
+  \fancyfoot[CE,CO]{\thepage}
+  }
+
 \begin{document}
-%\input{Tex/Frontpage}
-\begin{abstract}{服装检索，深度学习，注意力机制，多粒度}
+\pagenumbering{Roman}
+\pagestyle{plain}
+\chapter*{摘要}
+\markboth{摘要}
   随着社会开始走向智能化，网购成为人们的主要消费方式，消费者搜索商品的过程一般通过电商平台的检索算法实现。对于服装购物而言，
   传统的基于文本描述的服装检索算法（TBIR）越来越不能满足人们精细的检索需求。得益于深度学习和计算机视觉的蓬勃发展，基于图像内容的服装检索算法（CBIR）
   成为主流，即根据消费者上传的服装图像检索其同款服装。近阶段，对图像局部区域信息的抓取和对齐是该领域研究的一个热门方向，因此，
@@ -43,8 +55,10 @@
       保证局部关键信息特征的完整性。另外，启发式的提出多粒度的切分策略，通过融合不同的切分尺度的局部特征，有效提升模型的表达能力。
   \end{itemize}
   \vspace{3ex}
-\end{abstract}
-\begin{englishabstract}{Clothing retrieval, Deep learning, Attention mechanism, Multi-granularity}
+  \textbf{关键词:} 服装检索，深度学习，注意力机制，多粒度
+
+\chapter*{ABSTRACT}
+\markboth{ABSTRACT}
   With the development of society towards intelligent age, online shopping has become the main way of consumption, 
   the process of consumers searching for goods is generally implemented by the retrieval algorithm of the e-commerce platform. 
   The traditional Text-Based Image Retrieval(TBIR)
@@ -63,20 +77,27 @@
       In addition, The proposed multi-granularity partition strategy effectively enhances the model by merging local features of different partition scales.
   \end{itemize}
   \vspace{3ex}
-\end{englishabstract}
+  \textbf{Keywords:} Clothing retrieval, Deep learning, Attention mechanism, Multi-granularity
+
 
 \tableofcontents
 \listofothers
 
 \mainmatter
-
+\pagenumbering{arabic}
 \input{Tex/Intro}
 %\input{Tex/Review}
 \input{Tex/PartNet}
+\cleardoublepage 
 \input{Tex/MGN}
+\cleardoublepage 
 \input{Tex/Conclusion}
 
+\bibliographystyle{Biblio/seuthesix} 
+\clearpage
+\pagestyle{plain}
 \chapter*{致 谢}
+\markboth{致谢}
 硕士三年，倏忽而过，回顾这三年的硕士生涯，仿佛一切都在昨天，期间的努力、茫然、喜悦和收获都历历在目。在这里，衷心的向诸位老师、同学、亲人、朋友致以发自内心的谢意。
 
 感谢汪鹏老师。汪老师是我的指导老师，从开题报告到论文的撰写，汪老师给了我诸多的建议，汪老师的学术态度让我时刻铭记要怎样做科研，这份认真、严谨的科研态度是我终生的
@@ -90,8 +111,5 @@
 感谢一路以来的关爱。
 
 \addcontentsline{toc}{chapter}{致谢}
-
-\bibliographystyle{Biblio/seuthesix} 
-\addcontentsline{toc}{chapter}{参考文献}
 \bibliography{Biblio/ref}       
 \end{document}

@@ -98,9 +98,9 @@ listtablename={表格目录}
 \RequirePackage{bm}
 \RequirePackage{graphicx}
 \graphicspath{{Img/}{./}}
-\RequirePackage{nomencl}
+%\RequirePackage{nomencl}
 %\makenomenclature
-\newcommand{\setnomname}[1]{\renewcommand\nomname{#1}}
+%\newcommand{\setnomname}[1]{\renewcommand\nomname{#1}}
 %\renewcommand{\nomname}{术语与数学符号约定}
 %\RequirePackage{algorithm}
 %\RequirePackage{algorithmic}
@@ -137,8 +137,8 @@ listtablename={表格目录}
 \RequirePackage{fancyhdr}
 \fancypagestyle{seustyle}{%
 \fancyhf{}
-\fancyhead[CO]{\xiaowuhao\universityname{}\@thesistype}
-\fancyhead[CE]{ \xiaowuhao\leftmark}
+\fancyhead[CE]{\xiaowuhao\universityname{}\@thesistype}
+\fancyhead[CO]{ \xiaowuhao\leftmark}
 \fancyfoot[CO,CE]{\thepage}
 }
 \pagestyle{seustyle}
